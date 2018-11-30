@@ -231,8 +231,6 @@ jobs:
       - checkout
       - attach_workspace:
           at: /tmp/workspace
-
-      - run:
       - run: echo "This is not an orange"
 
 
@@ -357,10 +355,10 @@ workflows:
 
   commit-translated-files:
     jobs:
-    - commit-translated-files:
-        context: org-global
-        filters:
-          branches:
-            ignore: /.*/
-          tags:
-            only: /lang.*/
+      - commit-translated-files:
+          context: org-global
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /lang.*/
