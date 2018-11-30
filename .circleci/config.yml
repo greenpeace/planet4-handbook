@@ -221,6 +221,18 @@ jobs:
       - run: echo $SQLPROXY_KEY | base64 -d > key.json
       - run: /home/circleci/sql_create_sync_file.sh
 
+  commit-translated-files:
+    <<: *defaults
+    environment:
+       <<: *common_environment
+       <<: *develop_environment
+    working_directory: /tmp/workspace/src
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp/workspace
+      - run: echo "This is not an orange"
+
 
   sync-sql-to-release:
     <<: *defaults
@@ -340,3 +352,13 @@ workflows:
         <<: *sync_common
         requires:
           - sync-sql-to-release
+
+  commit-translated-files:
+    jobs:
+      - commit-translated-files:
+          context: org-global
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /lang.*/
