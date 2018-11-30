@@ -4,7 +4,7 @@
 	"license": "MIT",
 	"require": {
 		"greenpeace/planet4-child-theme-handbook" : "0.*",
-		"greenpeace/planet4-master-theme" : "dev-release/v1.25.0",
+		"greenpeace/planet4-master-theme" : "dev-languages",
 		"wpackagist-plugin/loco-translate": "2.2.0",
 		"wpackagist-theme/twentysixteen":"1.5"
 	},
