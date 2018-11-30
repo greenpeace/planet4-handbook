@@ -231,7 +231,11 @@ jobs:
       - checkout
       - attach_workspace:
           at: /tmp/workspace
-      - run: echo "This is not an orange"
+      - run:
+          name: Configure
+          command: |
+            ${HOME}/scripts/activate-gcloud-account.sh
+      - run: /tmp/workspace/src/localscripts/commit_languages.sh
 
 
   sync-sql-to-release:
