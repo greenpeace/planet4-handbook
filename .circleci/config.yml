@@ -225,7 +225,7 @@ jobs:
     <<: *defaults
     environment:
        <<: *common_environment
-       <<: *develop_environment
+       <<: *production_environment
     working_directory: /tmp/workspace/src
     steps:
       - checkout
