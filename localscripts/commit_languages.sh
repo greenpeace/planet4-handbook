@@ -40,6 +40,10 @@ git config --global user.name "CircleCI Bot"
 git config --global push.default simple
 
 echo ""
+echo " ########### Master Theme ####################"
+echo ""
+
+echo ""
 echo "Lets clone the repository where we will send the translations to"
 echo ""
 git clone git@github.com:greenpeace/planet4-master-theme.git gitrepos/planet4-master-theme -b languages || true
@@ -65,4 +69,37 @@ echo ""
 echo "Lets push them to the repository"
 echo ""
 git -C gitrepos/planet4-master-theme push
+
+
+echo ""
+echo " ########### Plugin blocks ####################"
+echo ""
+
+echo ""
+echo "Lets clone the repository where we will send the translations to"
+echo ""
+git clone git@github.com:greenpeace/planet4-plugin-blocks.git gitrepos/planet4-plugin-blocks -b languages || true
+
+echo ""
+echo "Lets delete the tempoarary files that Loco Translate creates"
+echo ""
+rm -f translations/planet4-plugin-blocks/languages/*.po~
+
+echo ""
+echo "Lets copy the modified languages file to the repository"
+echo ""
+cp translations/planet4-plugin-blocks/languages/ gitrepos/planet4-plugin-blocks/ -r
+
+echo ""
+echo "Lets add the new files"
+echo ""
+git -C gitrepos/planet4-plugin-blocks add languages/*
+
+git -C gitrepos/planet4-plugin-blocks commit -m "Autocommit - Language files" || true
+
+echo ""
+echo "Lets push them to the repository"
+echo ""
+git -C gitrepos/planet4-plugin-blocks push
+
 
