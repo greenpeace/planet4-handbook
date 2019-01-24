@@ -79,7 +79,7 @@ echo ""
 echo "Lets run the command to copy everything from the pod"
 echo ""
 
-kubectl -n "${HELM_NAMESPACE}" cp "$php://app/source/public/wp-content/themes/planet4-plugin-blocks/languages" translations/planet4-plugin-blocks/languages/
+kubectl -n "${HELM_NAMESPACE}" cp "$php://app/source/public/wp-content/plugins/planet4-plugin-blocks/languages" translations/planet4-plugin-blocks/languages/
 
 
 echo ""
