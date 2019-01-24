@@ -5,12 +5,13 @@
 	"require": {
 		"greenpeace/planet4-child-theme-handbook" : "0.*",
 		"greenpeace/planet4-master-theme" : "dev-languages",
-		"wpackagist-plugin/loco-translate": "2.2.0",
-		"wpackagist-theme/twentysixteen":"1.5",
-		"greenpeace/planet4-plugin-sync-lang-files":"dev-master"
+		"greenpeace/planet4-plugin-blocks" : "dev-languages",
+		"wpackagist-plugin/loco-translate": "2.*",
+		"wpackagist-theme/twentysixteen":"1.*",
+		"greenpeace/planet4-plugin-sync-lang-files":"1.*"
 	},
 	"scripts": {
-		"install:plugin-ideapush": "wp plugin install --activate https://raw.githubusercontent.com/greenpeace/planet4-3rdparty-plugins/master/ideapush-v4.26.zip",
+		"install:plugin-ideapush": "wp plugin install --activate https://raw.githubusercontent.com/greenpeace/planet4-3rdparty-plugins/master/ideapush-v4.35.zip",
 		"site:custom": [
 			"@install:plugin-ideapush"
 		]
