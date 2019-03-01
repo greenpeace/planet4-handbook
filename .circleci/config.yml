@@ -44,7 +44,8 @@ job_environments:
     NEWRELIC_APPNAME: P4 Handbook Production
     WP_DB_NAME: planet4-handbook_wordpress_master
     WP_STATELESS_BUCKET: planet4-handbook-stateless
-
+    WP_VERSION: 5.0.3
+    
 job_definitions:
   build_steps: &build_steps
     working_directory: ~/
