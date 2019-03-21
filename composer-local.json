@@ -11,7 +11,7 @@
 		"greenpeace/planet4-plugin-sync-lang-files":"1.*"
 	},
 	"scripts": {
-		"install:plugin-ideapush": "wp plugin install --activate https://raw.githubusercontent.com/greenpeace/planet4-3rdparty-plugins/master/ideapush-v4.37.zip",
+		"install:plugin-ideapush": "wp plugin install --activate https://raw.githubusercontent.com/greenpeace/planet4-3rdparty-plugins/master/ideapush-v4.44.zip",
 		"site:custom": [
 			"@install:plugin-ideapush"
 		]
