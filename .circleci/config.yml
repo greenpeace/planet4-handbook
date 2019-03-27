@@ -32,7 +32,6 @@ job_environments:
     NEWRELIC_APPNAME: P4 Handbook Release
     WP_DB_NAME: planet4-handbook_wordpress_release
     WP_STATELESS_BUCKET: planet4-handbook-stateless-release
-    WP_VERSION: 5.0.3
   production_environment: &production_environment
     APP_HOSTNAME: planet4.greenpeace.org
     CLOUDSQL_INSTANCE: planet4-prod
