@@ -7,11 +7,10 @@
 		"greenpeace/planet4-master-theme" : "dev-languages",
 		"greenpeace/planet4-plugin-blocks" : "dev-languages",
 		"wpackagist-plugin/loco-translate": "2.*",
-		"wpackagist-theme/twentysixteen":"1.*",
 		"greenpeace/planet4-plugin-sync-lang-files":"1.*"
 	},
 	"scripts": {
-		"install:plugin-ideapush": "wp plugin install --activate https://raw.githubusercontent.com/greenpeace/planet4-3rdparty-plugins/master/ideapush-v5.6.zip",
+		"install:plugin-ideapush": "wp plugin install --activate https://raw.githubusercontent.com/greenpeace/planet4-3rdparty-plugins/master/ideapush-v5.8.zip",
 		"site:custom": [
 			"@install:plugin-ideapush"
 		]
