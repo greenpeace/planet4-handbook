@@ -3,7 +3,7 @@
 	"description": "Greenpeace P4 Handbook",
 	"license": "MIT",
 	"require": {
-		"greenpeace/planet4-child-theme-handbook" : "0.0.15",
+		"greenpeace/planet4-child-theme-handbook" : "0.0.16",
 		"greenpeace/planet4-master-theme" : "dev-languages",
 		"greenpeace/planet4-plugin-blocks" : "dev-languages",
 		"wpackagist-plugin/loco-translate": "2.*",
