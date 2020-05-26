@@ -5,7 +5,7 @@ export GCLOUD_ZONE=us-central1-a
 echo ""
 echo "Get connected to gcloud"
 echo ""
-gcloud container clusters get-credentials ${GCLOUD_CLUSTER} --zone ${GCLOUD_ZONE} --project ${GOOGLE_PROJECT_ID}
+gcloud container clusters get-credentials "${GCLOUD_CLUSTER}" --zone "${GCLOUD_ZONE}" --project "${GOOGLE_PROJECT_ID}"
 
 echo ""
 echo "Lets get the php pod to run the commands against"
@@ -46,7 +46,7 @@ kubectl -n "${HELM_NAMESPACE}" cp "$php://app/source/public/wp-content/themes/pl
 echo ""
 echo "Lets clone the repository where we will send the translations to"
 echo ""
-git clone git@github.com:greenpeace/planet4-master-theme.git gitrepos/planet4-master-theme -b languages || true
+git clone git@github.com:greenpeace/planet4-master-theme.git gitrepos/planet4-master-theme -b master || true
 
 echo ""
 echo "Lets delete the tempoarary files that Loco Translate creates"
@@ -63,7 +63,7 @@ echo "Lets add the new files"
 echo ""
 git -C gitrepos/planet4-master-theme add languages/*
 
-git -C gitrepos/planet4-master-theme commit -m "Autocommit - Language files" || true
+git -C gitrepos/planet4-master-theme commit -m ":robot: Autocommit new translations" || true
 
 echo ""
 echo "Lets push them to the repository"
@@ -85,7 +85,7 @@ kubectl -n "${HELM_NAMESPACE}" cp "$php://app/source/public/wp-content/plugins/p
 echo ""
 echo "Lets clone the repository where we will send the translations to"
 echo ""
-git clone git@github.com:greenpeace/planet4-plugin-gutenberg-blocks.git gitrepos/planet4-plugin-gutenberg-blocks -b languages || true
+git clone git@github.com:greenpeace/planet4-plugin-gutenberg-blocks.git gitrepos/planet4-plugin-gutenberg-blocks -b master || true
 
 echo ""
 echo "Lets delete the tempoarary files that Loco Translate creates"
@@ -102,7 +102,7 @@ echo "Lets add the new files"
 echo ""
 git -C gitrepos/planet4-plugin-gutenberg-blocks add languages/*
 
-git -C gitrepos/planet4-plugin-gutenberg-blocks commit -m "Autocommit - Language files" || true
+git -C gitrepos/planet4-plugin-gutenberg-blocks commit -m ":robot: Autocommit new translations" || true
 
 echo ""
 echo "Lets push them to the repository"
@@ -124,7 +124,7 @@ kubectl -n "${HELM_NAMESPACE}" cp "$php://app/source/public/wp-content/plugins/p
 echo ""
 echo "Lets clone the repository where we will send the translations to"
 echo ""
-git clone git@github.com:greenpeace/planet4-plugin-gutenberg-engagingnetworks.git gitrepos/planet4-plugin-gutenberg-engagingnetworks -b languages || true
+git clone git@github.com:greenpeace/planet4-plugin-gutenberg-engagingnetworks.git gitrepos/planet4-plugin-gutenberg-engagingnetworks -b master || true
 
 echo ""
 echo "Lets delete the tempoarary files that Loco Translate creates"
@@ -141,7 +141,7 @@ echo "Lets add the new files"
 echo ""
 git -C gitrepos/planet4-plugin-gutenberg-engagingnetworks add languages/*
 
-git -C gitrepos/planet4-plugin-gutenberg-engagingnetworks commit -m "Autocommit - Language files" || true
+git -C gitrepos/planet4-plugin-gutenberg-engagingnetworks commit -m ":robot: Autocommit new translations" || true
 
 echo ""
 echo "Lets push them to the repository"
