@@ -91,6 +91,7 @@ echo ""
 echo "Lets delete the tempoarary files that Loco Translate creates"
 echo ""
 rm -f translations/planet4-plugin-gutenberg-blocks/languages/*.po~
+rm -f translations/planet4-plugin-gutenberg-blocks/languages/enform/*.po~
 
 echo ""
 echo "Lets copy the modified languages file to the repository"
@@ -108,44 +109,4 @@ echo ""
 echo "Lets push them to the repository"
 echo ""
 git -C gitrepos/planet4-plugin-gutenberg-blocks push
-
-
-echo ""
-echo " ########### Plugin Gutenberg Engagingnetworks ####################"
-echo ""
-
-echo ""
-echo "Lets run the command to copy everything from the pod"
-echo ""
-
-kubectl -n "${HELM_NAMESPACE}" cp "$php://app/source/public/wp-content/plugins/planet4-plugin-gutenberg-engagingnetworks/languages" translations/planet4-plugin-gutenberg-engagingnetworks/languages/
-
-
-echo ""
-echo "Lets clone the repository where we will send the translations to"
-echo ""
-git clone git@github.com:greenpeace/planet4-plugin-gutenberg-engagingnetworks.git gitrepos/planet4-plugin-gutenberg-engagingnetworks -b master || true
-
-echo ""
-echo "Lets delete the tempoarary files that Loco Translate creates"
-echo ""
-rm -f translations/planet4-plugin-gutenberg-engagingnetworks/languages/*.po~
-
-echo ""
-echo "Lets copy the modified languages file to the repository"
-echo ""
-cp translations/planet4-plugin-gutenberg-engagingnetworks/languages/ gitrepos/planet4-plugin-gutenberg-engagingnetworks/ -r
-
-echo ""
-echo "Lets add the new files"
-echo ""
-git -C gitrepos/planet4-plugin-gutenberg-engagingnetworks add languages/*
-
-git -C gitrepos/planet4-plugin-gutenberg-engagingnetworks commit -m ":robot: Autocommit new translations" || true
-
-echo ""
-echo "Lets push them to the repository"
-echo ""
-git -C gitrepos/planet4-plugin-gutenberg-engagingnetworks push
-
 
