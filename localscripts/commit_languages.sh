@@ -94,6 +94,10 @@ rm -f translations/planet4-plugin-gutenberg-blocks/languages/*.po~
 rm -f translations/planet4-plugin-gutenberg-blocks/languages/enform/*.po~
 
 echo ""
+sh ./tmp/workspace/src/localscripts/generate-po2json.sh
+echo ""
+
+echo ""
 echo "Lets copy the modified languages file to the repository"
 echo ""
 cp translations/planet4-plugin-gutenberg-blocks/languages/ gitrepos/planet4-plugin-gutenberg-blocks/ -r
