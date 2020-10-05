@@ -94,7 +94,7 @@ rm -f translations/planet4-plugin-gutenberg-blocks/languages/*.po~
 rm -f translations/planet4-plugin-gutenberg-blocks/languages/enform/*.po~
 
 echo ""
-sh /tmp/workspace/src/localscripts/generate-po2json.sh
+/tmp/workspace/src/localscripts/generate-po2json.sh
 echo ""
 
 echo ""
