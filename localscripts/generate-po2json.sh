@@ -11,7 +11,7 @@ echo ""
 echo "Generating .po to .json files..."
 echo ""
 
-pofilenames=$(ls ./translations/planet4-plugin-gutenberg-blocks/languages/*.po)
+pofilenames=$(ls translations/planet4-plugin-gutenberg-blocks/languages/*.po)
 for pofilename in $pofilenames
 do
    text_domain='planet4-blocks-backend'
