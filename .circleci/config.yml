@@ -7,8 +7,8 @@ parameters:
     default: false
 
 docker_auth: &docker_auth
-    username: $DOCKERHUB_USERNAME
-    password: $DOCKERHUB_PASSWORD
+  username: $DOCKERHUB_USERNAME
+  password: $DOCKERHUB_PASSWORD
 
 defaults: &defaults
   docker:
@@ -63,11 +63,44 @@ job_environments:
     WP_DB_NAME: planet4-handbook_wordpress_master
     WP_STATELESS_BUCKET: planet4-handbook-stateless
 
+commands:
+  approve_job:
+    description: "Approve an on-hold job."
+    parameters:
+      job_name:
+        type: string
+    steps:
+      - run:
+          name: Unhold job "<< parameters.job_name >>"
+          command: |
+            if [ -f /tmp/workspace/approve_workflow ]; then
+              WORKFLOW_ID=$(cat /tmp/workspace/approve_workflow)
+              url="https://circleci.com/api/v2/workflow/$WORKFLOW_ID/job"
+              # Get workflow details
+              workflow=$(curl -s -u "${CIRCLE_TOKEN}": -X GET --header "Content-Type: application/json" "$url")
+              echo $workflow
+              # Get approval job id
+              job_id=$(echo "$workflow" | jq -r '.items[] | select(.name=="<< parameters.job_name >>") | .approval_request_id ')
+              echo $job_id
+              if [[ -z $job_id ]]; then
+                echo "Approval ID not found"
+                exit 1
+              fi
+              echo "Approving << parameters.job_name >> for workflow $url"
+              echo "Job ID: ${job_id}"
+              curl \
+                --header "Content-Type: application/json" \
+                -u "${CIRCLE_TOKEN}:" \
+                -X POST \
+                "https://circleci.com/api/v2/workflow/${CIRCLE_WORKFLOW_ID}/approve/${job_id}"
+            fi
+
 job_definitions:
   visualtests_reference_steps: &visualtests_reference_steps
     docker:
       - image: greenpeaceinternational/planet4-backstop:latest
-        auth: &docker_auth
+        auth:
+          <<: *docker_auth
     working_directory: /src
     steps:
       - run: ./checkout.sh
@@ -84,7 +117,8 @@ job_definitions:
   visualtests_compare_steps: &visualtests_compare_steps
     docker:
       - image: greenpeaceinternational/planet4-backstop:latest
-        auth: &docker_auth
+        auth:
+          <<: *docker_auth
     working_directory: /src
     parameters:
       notify:
@@ -133,10 +167,6 @@ job_definitions:
       - run: make persist
       - run: make build
       - run: make push
-      - run:
-          name: Notify failure
-          when: on_fail
-          command: TYPE="Build" notify-job-failure.sh
       - save_cache:
           key: composer-v5-{{ .Branch }}-{{ .Revision }}-{{ .BuildNum }}
           paths:
@@ -153,7 +183,8 @@ job_definitions:
       - image: gcr.io/planet-4-151612/p4-codeception:build-12
       - name: selenium
         image: selenium/standalone-chrome-debug:3.141.59-oxygen
-        auth: &docker_auth
+        auth:
+          <<: *docker_auth
     steps:
       - checkout
       - run: if [ ! -d "tests" ] || [ ! "$(ls -A tests)" ]; then circleci-agent step halt; fi
@@ -181,30 +212,33 @@ job_definitions:
         type: boolean
         default: false
     steps:
+      - checkout:
+          path: /home/circleci/checkout
       - attach_workspace:
           at: /tmp/workspace
       - run: activate-gcloud-account.sh
-      - run: BUILD_TAG=build-$(cat /tmp/workspace/var/circle-build-num) make deploy
+      - run: make prepare-helm
+      - run: make backup
+      - run: BUILD_TAG=build-$(cat /tmp/workspace/var/circle-build-num) make deploy-helm
+      - run: make post-deploy
+      - run:
+          name: Extract workflow from commit message
+          command: |
+            UNHOLD_WORKFLOW_LINE=$(git --git-dir=/home/circleci/checkout/.git log --format=%B -n 1 "$CIRCLE_SHA1" | { grep '^\/unhold ' || true; } )
+            echo "line $UNHOLD_WORKFLOW_LINE"
+            if [[ -n $UNHOLD_WORKFLOW_LINE ]]; then
+              WORKFLOW_ID=${UNHOLD_WORKFLOW_LINE#"/unhold "}
+              echo "$WORKFLOW_ID"
+              echo $WORKFLOW_ID > /tmp/workspace/approve_workflow
+            fi
+      - approve_job:
+          job_name: instance-ready
       - when:
           condition: << parameters.is_prod >>
           steps:
-            - run:
-                name: Initiate finish-staging (approve rollback but it won't really)
-                command: |
-                  url="https://circleci.com/api/v2/workflow/$CIRCLE_WORKFLOW_ID/job"
-
-                  # Get workflow details
-                  workflow=$(curl -s -u "${CIRCLE_TOKEN}": -X GET --header "Content-Type: application/json" "$url")
-                  # Get approval job id
-                  job_id=$(echo "$workflow" | jq -r '.items[] | select(.name=="rollback-staging") | .approval_request_id ')
-
-                  echo "Finishing staging."
-                  echo "Job ID: ${job_id}"
-                  curl \
-                    --header "Content-Type: application/json" \
-                    -u "${CIRCLE_TOKEN}:" \
-                    -X POST \
-                    "https://circleci.com/api/v2/workflow/${CIRCLE_WORKFLOW_ID}/approve/${job_id}"
+            - run: echo $CIRCLE_WORKFLOW_ID > /tmp/workspace/approve_workflow
+            - approve_job:
+                job_name: rollback-staging
       - when:
           condition: << parameters.notify >>
           steps:
@@ -307,16 +341,6 @@ jobs:
       <<: *release_environment
     <<: *deploy_steps
 
-  merge-develop:
-    <<: *defaults
-    environment:
-      <<: *common_environment
-      <<: *develop_environment
-    working_directory: /tmp/workspace/src
-    steps:
-      - checkout
-      - run: merge-develop.sh
-
   finish-staging:
     <<: *defaults
     environment:
@@ -368,9 +392,9 @@ jobs:
       - run:
           name: Configure
           command: |
-            ${HOME}/scripts/activate-gcloud-account.sh
+            activate-gcloud-account.sh
       - run: echo $SQLPROXY_KEY | base64 -d > key.json
-      - run: /home/circleci/sql_create_sync_file.sh
+      - run: sql_create_sync_file.sh
 
   sync-to-staging:
     <<: *defaults
@@ -385,9 +409,9 @@ jobs:
       - run:
           name: Configure
           command: |
-            ${HOME}/scripts/activate-gcloud-account.sh
+            activate-gcloud-account.sh
       - run: echo $SQLPROXY_KEY | base64 -d > key.json
-      - run: /home/circleci/sql_to_sync_site.sh release
+      - run: sql_to_sync_site.sh release
 
   sync-to-develop:
     <<: *defaults
@@ -402,9 +426,9 @@ jobs:
       - run:
           name: Configure
           command: |
-            ${HOME}/scripts/activate-gcloud-account.sh
+            activate-gcloud-account.sh
       - run: echo $SQLPROXY_KEY | base64 -d > key.json
-      - run: /home/circleci/sql_to_sync_site.sh develop
+      - run: sql_to_sync_site.sh develop
 
   notify-sync:
     <<: *defaults
@@ -415,12 +439,13 @@ jobs:
     steps:
       - checkout
       - run: activate-gcloud-account.sh
-      - run: /home/circleci/notify-sync-admins.sh
+      - run: notify-sync-admins.sh
 
   backup:
     docker:
       - image: greenpeaceinternational/planet4-backup:latest
-        auth: &docker_auth
+        auth:
+          <<: *docker_auth
     environment:
       <<: *common_environment
       <<: *production_environment
@@ -443,16 +468,17 @@ jobs:
           at: /tmp/workspace
       - run:
           name: Configure
-          command: |
-            ${HOME}/scripts/activate-gcloud-account.sh
-      - run: /tmp/workspace/src/localscripts/commit_languages.sh
+          command: activate-gcloud-account.sh
+      - run:
+          name: Commit languages
+          command: /tmp/workspace/src/localscripts/commit_languages.sh
 
 workflow_definitions:
   on_develop_commit: &on_develop_commit
     context: org-global
     filters:
       branches:
-        only: develop
+        only: main
   on_release_tag: &on_release_tag
     context: org-global
     filters:
@@ -473,7 +499,6 @@ workflows:
           requires:
             - build-develop
             - visualtests-reference-develop
-            - merge-develop
       - test-develop:
           <<: *on_develop_commit
           requires:
@@ -482,9 +507,8 @@ workflows:
           <<: *on_develop_commit
           requires:
             - deploy-develop
-      - merge-develop:
-          <<: *on_develop_commit
-  release:
+
+  production:
     unless: << pipeline.parameters.rollback >>
     jobs:
       - visualtests-reference:
@@ -548,7 +572,7 @@ workflows:
           filters:
             branches:
               only:
-                - master
+                - main
     jobs:
       - create-sync-sql:
           context: org-global
@@ -568,7 +592,7 @@ workflows:
           filters:
             branches:
               only:
-                - master
+                - main
     jobs:
       - notify-sync:
           context: org-global
@@ -580,7 +604,7 @@ workflows:
           filters:
             branches:
               only:
-                - master
+                - main
     jobs:
       - backup:
           context: org-global
