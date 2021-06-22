@@ -2,6 +2,12 @@
     "name": "greenpeace/planet4-handbook",
     "description": "Greenpeace P4 Handbook",
     "license": "MIT",
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://packagist.org"
+        }
+    ],
     "require": {
         "greenpeace/planet4-child-theme-handbook" : "dev-master",
         "wpackagist-plugin/loco-translate": "2.*",
