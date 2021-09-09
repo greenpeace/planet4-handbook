@@ -1,0 +1,9 @@
+{
+  "scenarios": [
+    {
+      "label": "Planet4 product page",
+      "url": "https://APP_HOSTNAME/",
+      "delay": 2500
+    }
+  ]
+}
