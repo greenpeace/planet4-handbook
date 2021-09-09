@@ -28,7 +28,7 @@ job_environments:
   develop_environment: &develop_environment
     APP_ENVIRONMENT: development
     APP_HOSTNAME: planet4-dev.greenpeace.org
-    APP_HOSTPATH: handbook
+    APP_HOSTPATH:
     CLOUDSQL_INSTANCE: p4-develop-k8s
     GCLOUD_CLUSTER: p4-development
     GOOGLE_PROJECT_ID: planet-4-151612
@@ -42,7 +42,7 @@ job_environments:
   release_environment: &release_environment
     APP_ENVIRONMENT: staging
     APP_HOSTNAME: planet4-stage.greenpeace.org
-    APP_HOSTPATH: handbook
+    APP_HOSTPATH:
     CLOUDSQL_INSTANCE: planet4-prod
     GCLOUD_CLUSTER: planet4-production
     GOOGLE_PROJECT_ID: planet4-production
@@ -53,7 +53,7 @@ job_environments:
     WP_STATELESS_BUCKET: planet4-handbook-stateless-release
   production_environment: &production_environment
     APP_HOSTNAME: planet4.greenpeace.org
-    APP_HOSTPATH: handbook
+    APP_HOSTPATH:
     CLOUDSQL_INSTANCE: planet4-prod
     GCLOUD_CLUSTER: planet4-production
     GOOGLE_PROJECT_ID: planet4-production
