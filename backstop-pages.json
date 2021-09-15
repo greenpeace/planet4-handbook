@@ -1,9 +1,25 @@
 {
   "scenarios": [
     {
-      "label": "Planet4 product page",
-      "url": "https://APP_HOSTNAME/",
-      "delay": 2500
+      "label": "Handbook homepage",
+      "url": "https://APP_HOSTNAME/handbook/",
+      "delay": 2500,
+      "misMatchThreshold": 1.5,
+      "selectors": [
+        "#header",
+        "#footer"
+      ]
+    },
+    {
+      "label": "Handbook search",
+      "url": "https://APP_HOSTNAME/handbook/?s=",
+      "delay": 3000,
+      "misMatchThreshold": 1.5,
+      "selectors": [
+        ".search-bar",
+        ".sort-filter",
+        "#filter-sidebar-options"
+      ]
     }
   ]
 }
