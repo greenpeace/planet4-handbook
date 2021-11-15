@@ -9,7 +9,7 @@
         }
     ],
     "require": {
-        "greenpeace/planet4-child-theme-handbook" : "dev-planet-5646",
+        "greenpeace/planet4-child-theme-handbook" : "dev-master",
         "wpackagist-plugin/loco-translate": "2.*",
         "greenpeace/planet4-plugin-sync-lang-files":"1.*",
         "greenpeace/planet4-master-theme" : "dev-master",
