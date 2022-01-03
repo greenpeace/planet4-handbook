@@ -13,7 +13,6 @@ job_environments:
     GOOGLE_PROJECT_ID: planet-4-151612
     HELM_NAMESPACE: develop
     HELM_RELEASE: planet4-handbook
-    NEWRELIC_APPNAME: P4 Handbook Development
     WP_DB_NAME: planet4-handbook_wordpress_develop
     WP_STATELESS_BUCKET: planet4-handbook-stateless-develop
   release_environment: &release_environment
@@ -25,7 +24,6 @@ job_environments:
     GOOGLE_PROJECT_ID: planet4-production
     HELM_NAMESPACE: handbook
     HELM_RELEASE: planet4-handbook-release
-    NEWRELIC_APPNAME: P4 Handbook Release
     WP_DB_NAME: planet4-handbook_wordpress_release
     WP_STATELESS_BUCKET: planet4-handbook-stateless-release
   production_environment: &production_environment
@@ -36,6 +34,5 @@ job_environments:
     GOOGLE_PROJECT_ID: planet4-production
     HELM_NAMESPACE: handbook
     HELM_RELEASE: planet4-handbook-master
-    NEWRELIC_APPNAME: P4 Handbook Production
     WP_DB_NAME: planet4-handbook_wordpress_master
     WP_STATELESS_BUCKET: planet4-handbook-stateless
