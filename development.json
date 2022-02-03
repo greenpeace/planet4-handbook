@@ -1,0 +1,5 @@
+{
+"require": {
+    "wpackagist-plugin/debug-bar-elasticpress" : "2.1.0"
+  }
+}
