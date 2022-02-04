@@ -14,6 +14,7 @@
     "greenpeace/planet4-plugin-sync-lang-files":"1.*",
     "greenpeace/planet4-master-theme" : "dev-master",
     "greenpeace/planet4-plugin-gutenberg-blocks": "dev-master",
+    "wpackagist-plugin/debug-bar": "1.1.2",
     "wpackagist-plugin/debug-bar-elasticpress" : "2.1.0",
     "wpackagist-plugin/elasticpress":"3.6.*"
   },
