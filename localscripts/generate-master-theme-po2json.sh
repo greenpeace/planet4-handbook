@@ -11,17 +11,17 @@ echo ""
 echo "Generating .po to .json files..."
 echo ""
 
-pofilenames=$(ls translations/planet4-plugin-gutenberg-blocks/languages/*.po)
+pofilenames=$(ls translations/planet4-master-theme/languages/*.po)
 for pofilename in $pofilenames
 do
-   text_domain='planet4-blocks-backend'
+   text_domain='planet4-master-theme-backend'
    if [[ "$pofilename" =~ .*"$text_domain".* ]]; then
-     suffix='script'
+     suffix='menu-editor'
    else
-     suffix='frontend'
+     suffix='main'
    fi
    # Generate json file from .po file. (Note: The o/p filename should be ${domain}-${locale}-${handle}.json)
-   npx po2json "$pofilename" "${pofilename/.po/}-planet4-blocks-${suffix}.json" -f jed1.x;
+   npx po2json "$pofilename" "${pofilename/.po/}-${suffix}.json" -f jed1.x;
 done
 
 echo ""
