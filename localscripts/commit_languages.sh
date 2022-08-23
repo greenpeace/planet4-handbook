@@ -52,6 +52,12 @@ echo ""
 echo "Lets delete the tempoarary files that Loco Translate creates"
 echo ""
 rm -f translations/planet4-master-theme/languages/*.po~
+# Remove old .json files (including Loco translate generated json files)
+rm -f translations/planet4-master-theme/languages/*.json
+
+echo ""
+/tmp/workspace/src/localscripts/generate-master-theme-po2json.sh
+echo ""
 
 echo ""
 echo "Lets copy the modified languages file to the repository"
@@ -92,9 +98,12 @@ echo "Lets delete the tempoarary files that Loco Translate creates"
 echo ""
 rm -f translations/planet4-plugin-gutenberg-blocks/languages/*.po~
 rm -f translations/planet4-plugin-gutenberg-blocks/languages/enform/*.po~
+# Remove old .json files
+rm -f translations/planet4-plugin-gutenberg-blocks/languages/*.json
+rm -f translations/planet4-plugin-gutenberg-blocks/languages/enform/*.json
 
 echo ""
-/tmp/workspace/src/localscripts/generate-po2json.sh
+/tmp/workspace/src/localscripts/generate-blocks-plugin-po2json.sh
 echo ""
 
 echo ""
