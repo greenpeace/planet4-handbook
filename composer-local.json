@@ -12,8 +12,8 @@
     "greenpeace/planet4-child-theme-handbook" : "dev-main",
     "wpackagist-plugin/loco-translate": "2.*",
     "greenpeace/planet4-plugin-sync-lang-files":"1.*",
-    "greenpeace/planet4-master-theme" : "dev-master",
-    "greenpeace/planet4-plugin-gutenberg-blocks": "dev-master"
+    "greenpeace/planet4-master-theme" : "dev-main",
+    "greenpeace/planet4-plugin-gutenberg-blocks": "dev-main"
   },
   "scripts": {
     "install:plugin-ideapush": "wp plugin install --activate https://storage.googleapis.com/planet4-3rdparty-plugins/ideapush-v8.14.zip",
