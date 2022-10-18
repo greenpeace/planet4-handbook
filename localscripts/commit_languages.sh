@@ -46,7 +46,7 @@ kubectl -n "${HELM_NAMESPACE}" cp "$php://app/source/public/wp-content/themes/pl
 echo ""
 echo "Lets clone the repository where we will send the translations to"
 echo ""
-git clone git@github.com:greenpeace/planet4-master-theme.git gitrepos/planet4-master-theme -b master || true
+git clone git@github.com:greenpeace/planet4-master-theme.git gitrepos/planet4-master-theme -b main || true
 
 echo ""
 echo "Lets delete the tempoarary files that Loco Translate creates"
@@ -91,7 +91,7 @@ kubectl -n "${HELM_NAMESPACE}" cp "$php://app/source/public/wp-content/plugins/p
 echo ""
 echo "Lets clone the repository where we will send the translations to"
 echo ""
-git clone git@github.com:greenpeace/planet4-plugin-gutenberg-blocks.git gitrepos/planet4-plugin-gutenberg-blocks -b master || true
+git clone git@github.com:greenpeace/planet4-plugin-gutenberg-blocks.git gitrepos/planet4-plugin-gutenberg-blocks -b main || true
 
 echo ""
 echo "Lets delete the tempoarary files that Loco Translate creates"
