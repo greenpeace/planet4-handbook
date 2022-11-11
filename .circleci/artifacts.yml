@@ -11,10 +11,12 @@ job_environments:
     CLOUDSQL_INSTANCE: p4-develop-k8s
     GCLOUD_CLUSTER: p4-development
     GOOGLE_PROJECT_ID: planet-4-151612
-    HELM_NAMESPACE: develop
+    HELM_NAMESPACE: handbook
     HELM_RELEASE: planet4-handbook
     WP_DB_NAME: planet4-handbook_wordpress_develop
     WP_STATELESS_BUCKET: planet4-handbook-stateless-develop
+  release_build_env: &release_build_env
+    GOOGLE_PROJECT_ID: planet4-production
   release_environment: &release_environment
     APP_ENVIRONMENT: staging
     APP_HOSTNAME: planet4-stage.greenpeace.org
@@ -22,7 +24,7 @@ job_environments:
     CLOUDSQL_INSTANCE: planet4-prod
     GCLOUD_CLUSTER: planet4-production
     GOOGLE_PROJECT_ID: planet4-production
-    HELM_NAMESPACE: handbook
+    HELM_NAMESPACE: handbook-staging
     HELM_RELEASE: planet4-handbook-release
     WP_DB_NAME: planet4-handbook_wordpress_release
     WP_STATELESS_BUCKET: planet4-handbook-stateless-release
