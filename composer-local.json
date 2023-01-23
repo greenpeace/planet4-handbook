@@ -17,8 +17,10 @@
   },
   "scripts": {
     "install:plugin-ideapush": "wp plugin install --activate https://storage.googleapis.com/planet4-3rdparty-plugins/ideapush-v8.14.zip",
+    "core:gf-language": "rsync -ar public/wp-content/themes/planet4-master-theme/languages/plugins/gravityforms/ public/wp-content/plugins/gravityforms/languages/",
     "site:custom": [
-      "@install:plugin-ideapush"
+      "@install:plugin-ideapush",
+      "@core:gf-language"
     ]
   }
 }
