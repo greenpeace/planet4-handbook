@@ -38,10 +38,16 @@ echo " ########### Master Theme ####################"
 echo ""
 
 echo ""
-echo "Lets run the command to copy everything from the pod"
+echo "Lets run the command to copy Master Theme language files from the pod"
 echo ""
 
 kubectl -n "${HELM_NAMESPACE}" cp "$php://app/source/public/wp-content/themes/planet4-master-theme/languages" translations/planet4-master-theme/languages/
+
+echo ""
+echo "Lets run the command to copy GF plugin language files from the pod"
+echo ""
+
+kubectl -n "${HELM_NAMESPACE}" cp "$php://app/source/public/wp-content/plugins/gravityforms/languages" translations/planet4-master-theme/languages/plugins/gravityforms/
 
 echo ""
 echo "Lets clone the repository where we will send the translations to"
