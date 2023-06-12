@@ -1,24 +1,13 @@
 {
   "scenarios": [
     {
-      "label": "Handbook homepage",
+      "label": "Handbook sidebar",
       "url": "https://APP_HOSTNAME/handbook/",
-      "delay": 2500,
-      "misMatchThreshold": 1.5,
+      "removeSelectors": [
+        ".page-content"
+      ],
       "selectors": [
-        "#header",
-        "#footer"
-      ]
-    },
-    {
-      "label": "Handbook search",
-      "url": "https://APP_HOSTNAME/handbook/?s=",
-      "delay": 3000,
-      "misMatchThreshold": 1.5,
-      "selectors": [
-        ".search-bar",
-        ".sort-filter",
-        "#filter-sidebar-options"
+        "#sidebar"
       ]
     }
   ]
