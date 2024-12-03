@@ -34,10 +34,6 @@ git config --global user.name "CircleCI Bot"
 git config --global push.default simple
 
 echo ""
-echo " ########### Master Theme ####################"
-echo ""
-
-echo ""
 echo "Lets run the command to copy Master Theme language files from the pod"
 echo ""
 
@@ -85,51 +81,3 @@ echo ""
 echo "Lets push them to the repository"
 echo ""
 git -C gitrepos/planet4-master-theme push
-
-
-echo ""
-echo " ########### Plugin Gutenberg Blocks ####################"
-echo ""
-
-echo ""
-echo "Lets run the command to copy everything from the pod"
-echo ""
-
-kubectl -n "${HELM_NAMESPACE}" cp "$php://app/source/public/wp-content/plugins/planet4-plugin-gutenberg-blocks/languages" translations/planet4-plugin-gutenberg-blocks/languages/
-
-
-echo ""
-echo "Lets clone the repository where we will send the translations to"
-echo ""
-git clone git@github.com:greenpeace/planet4-plugin-gutenberg-blocks.git gitrepos/planet4-plugin-gutenberg-blocks -b main || true
-
-echo ""
-echo "Lets delete the tempoarary files that Loco Translate creates"
-echo ""
-rm -f translations/planet4-plugin-gutenberg-blocks/languages/*.po~
-rm -f translations/planet4-plugin-gutenberg-blocks/languages/enform/*.po~
-# Remove old .json files
-rm -f translations/planet4-plugin-gutenberg-blocks/languages/*.json
-rm -f translations/planet4-plugin-gutenberg-blocks/languages/enform/*.json
-
-echo ""
-/tmp/workspace/src/localscripts/generate-blocks-plugin-po2json.sh
-echo ""
-
-echo ""
-echo "Lets copy the modified languages file to the repository"
-echo ""
-cp translations/planet4-plugin-gutenberg-blocks/languages/ gitrepos/planet4-plugin-gutenberg-blocks/ -r
-
-echo ""
-echo "Lets add the new files"
-echo ""
-git -C gitrepos/planet4-plugin-gutenberg-blocks add languages/*
-
-git -C gitrepos/planet4-plugin-gutenberg-blocks commit -m ":robot: Autocommit new translations" || true
-
-echo ""
-echo "Lets push them to the repository"
-echo ""
-git -C gitrepos/planet4-plugin-gutenberg-blocks push
-
