@@ -12,7 +12,7 @@
     "greenpeace/planet4-child-theme-handbook" : "dev-main",
     "wpackagist-plugin/loco-translate": "2.*",
     "greenpeace/planet4-plugin-sync-lang-files":"2.*",
-    "greenpeace/planet4-master-theme" : "dev-main",
+    "greenpeace/planet4-master-theme" : "dev-blocks-language-files",
     "greenpeace/planet4-plugin-gutenberg-blocks": "dev-main"
   },
   "scripts": {
