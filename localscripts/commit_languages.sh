@@ -58,10 +58,12 @@ echo ""
 echo "Lets delete the tempoarary files that Loco Translate creates"
 echo ""
 rm -f translations/planet4-master-theme/languages/*.po~
+rm -f translations/planet4-master-theme/languages/blocks/*.po~
 rm -f translations/planet4-master-theme/languages/plugins/gravityforms/*.po~
 rm translations/planet4-master-theme/languages/plugins/gravityforms/index.php
 # Remove old .json files (including Loco translate generated json files)
 rm -f translations/planet4-master-theme/languages/*.json
+rm -f translations/planet4-master-theme/languages/blocks/*.json
 
 echo ""
 /tmp/workspace/src/localscripts/generate-master-theme-po2json.sh
