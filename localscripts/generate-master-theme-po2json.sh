@@ -31,12 +31,12 @@ for pofilename in $pofilenames
 do
    text_domain='planet4-blocks-backend'
    if [[ "$pofilename" =~ .*"$text_domain".* ]]; then
-     suffix='editor-script'
+     suffix='theme-editor-script'
    else
-     suffix='script'
+     suffix='theme-script'
    fi
    # Generate json file from .po file. (Note: The o/p filename should be ${domain}-${locale}-${handle}.json)
-   npx po2json "$pofilename" "${pofilename/.po/}-master-theme-${suffix}.json" -f jed1.x;
+   npx po2json "$pofilename" "${pofilename/.po/}-planet4-blocks-${suffix}.json" -f jed1.x;
 done
 
 echo ""
