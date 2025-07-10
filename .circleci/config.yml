@@ -392,6 +392,19 @@ jobs:
       - run: ls
       - run: ./go.sh
 
+  elasticpress:
+    <<: *defaults
+    environment:
+      <<: *common_environment
+      <<: *production_environment
+    steps:
+      - run:
+          name: Configure
+          command: activate-gcloud-account.sh
+      - run:
+          name: Sync ElasticPress
+          command: elasticpress-sync.sh
+
   commit-translated-files:
     <<: *defaults
     environment:
@@ -494,6 +507,19 @@ workflows:
     jobs:
       - backup:
           context: org-global
+
+  elasticpress:
+    triggers:
+      - schedule:
+          cron: "30 04 * * *"
+          filters:
+            branches:
+              only:
+                - main
+    jobs:
+      - elasticpress:
+          context: org-global
+
   commit-translated-files:
     jobs:
       - commit-translated-files:
