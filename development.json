@@ -1,5 +1,6 @@
 {
   "require": {
-    "greenpeace/planet4-master-theme" : "dev-PLANET-7684-merge-blocks-textdomain"
+    "greenpeace/planet4-master-theme" : "dev-PLANET-7684-merge-blocks-textdomain",
+    "greenpeace/planet4-child-theme-handbook" : "dev-PLANET-8070-announcements-menu"
   }
 }
