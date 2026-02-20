@@ -40,6 +40,7 @@ job_environments:
     HELM_RELEASE: planet4-handbook
     WP_DB_NAME: planet4-handbook_wordpress_develop
     WP_STATELESS_BUCKET: planet4-handbook-stateless-develop
+    PARENT_VERSION: php8.3
   release_build_env: &release_build_env
     GOOGLE_PROJECT_ID: planet4-production
   release_environment: &release_environment
