@@ -141,6 +141,14 @@ job_definitions:
       - run: BUILD_TAG=build-$(cat /tmp/workspace/var/circle-build-num) make deploy-helm
       - run: make post-deploy
       - run:
+          name: Deploy RAG services (Elasticsearch + Ollama) - develop only
+          command: |
+            if [ "${APP_ENVIRONMENT:-}" = "development" ]; then
+              /home/circleci/checkout/localscripts/deploy-rag-services.sh
+            else
+              echo "Skipping RAG services deploy (only runs in develop environment)"
+            fi
+      - run:
           name: Extract workflow from commit message
           command: |
             UNHOLD_WORKFLOW_LINE=$(git --git-dir=/home/circleci/checkout/.git log --format=%B -n 1 "$CIRCLE_SHA1" | { grep '^\/unhold ' || true; } )
