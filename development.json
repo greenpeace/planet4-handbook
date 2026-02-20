@@ -1,10 +1,4 @@
 {
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/sagarsdeshmukh/swayam-ai-chatbot"
-    }
-  ],
   "require": {
     "greenpeace/planet4-master-theme" : "dev-main",
     "sagarsdeshmukh/swayam-ai-chatbot" : "dev-main"
