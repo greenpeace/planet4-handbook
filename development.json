@@ -1,6 +1,7 @@
 {
   "require": {
-    "greenpeace/planet4-master-theme" : "dev-main"
+    "wpackagist-plugin/was-this-article-helpful" : "1.*",
+    "wpackagist-plugin/daext-helpful": "1.*"
   },
   "scripts": {
     "install:plugin-ai-chatbot": "wp plugin install --activate https://storage.googleapis.com/planet4-3rdparty-plugins/swayam-ai-chatbot_1.0.0.zip",
