@@ -1,0 +1,68 @@
+---
+# PersistentVolumeClaim for RAG Elasticsearch data
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: elasticsearch-rag-data
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
+# Deployment for RAG Elasticsearch (separate from ElasticPress)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: elasticsearch-rag
+  labels:
+    app: elasticsearch-rag
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: elasticsearch-rag
+  template:
+    metadata:
+      labels:
+        app: elasticsearch-rag
+    spec:
+      containers:
+        - name: elasticsearch
+          image: docker.elastic.co/elasticsearch/elasticsearch:9.3.0
+          env:
+            - name: discovery.type
+              value: single-node
+            - name: xpack.security.enabled
+              value: "false"
+            - name: ES_JAVA_OPTS
+              value: "-Xms512m -Xmx512m"
+          ports:
+            - containerPort: 9200
+          resources:
+            requests:
+              memory: "1Gi"
+              cpu: "500m"
+            limits:
+              memory: "2Gi"
+              cpu: "1"
+          volumeMounts:
+            - name: data
+              mountPath: /usr/share/elasticsearch/data
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: elasticsearch-rag-data
+---
+# Service to expose RAG Elasticsearch within the cluster
+apiVersion: v1
+kind: Service
+metadata:
+  name: elasticsearch-rag
+spec:
+  selector:
+    app: elasticsearch-rag
+  ports:
+    - port: 9200
+      targetPort: 9200
