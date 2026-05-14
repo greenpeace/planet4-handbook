@@ -2,6 +2,6 @@
   "require": {
     "wpackagist-plugin/was-this-article-helpful" : "1.*",
     "wpackagist-plugin/daext-helpful": "1.*",
-    "greenpeace/planet4-master-theme" : "dev-file-mods"
+    "greenpeace/planet4-child-theme-handbook": "dev-file-mods"
   }
 }
