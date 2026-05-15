@@ -26,12 +26,12 @@ orbs:
 job_environments:
   common_environment: &common_environment
     CONTAINER_PREFIX: planet4-handbook
+    APP_HOSTPATH:
     MAX_REPLICA_COUNT: 1
     MIN_REPLICA_COUNT: 1
   develop_environment: &develop_environment
     APP_ENVIRONMENT: development
     APP_HOSTNAME: planet4-dev.greenpeace.org
-    APP_HOSTPATH:
     CLOUDSQL_INSTANCE: p4-develop-k8s
     GCLOUD_CLUSTER: p4-development
     GOOGLE_PROJECT_ID: planet-4-151612
@@ -44,7 +44,6 @@ job_environments:
   release_environment: &release_environment
     APP_ENVIRONMENT: staging
     APP_HOSTNAME: planet4-stage.greenpeace.org
-    APP_HOSTPATH:
     CLOUDSQL_INSTANCE: planet4-prod
     GCLOUD_CLUSTER: planet4-production
     GOOGLE_PROJECT_ID: planet4-production
@@ -54,7 +53,6 @@ job_environments:
     WP_STATELESS_BUCKET: planet4-handbook-stateless-release
   production_environment: &production_environment
     APP_HOSTNAME: planet4.greenpeace.org
-    APP_HOSTPATH:
     CLOUDSQL_INSTANCE: planet4-prod
     GCLOUD_CLUSTER: planet4-production
     GOOGLE_PROJECT_ID: planet4-production
@@ -76,16 +74,19 @@ commands:
             if [ -f /tmp/workspace/approve_workflow ]; then
               WORKFLOW_ID=$(cat /tmp/workspace/approve_workflow)
               url="https://circleci.com/api/v2/workflow/$WORKFLOW_ID/job"
+
               # Get workflow details
               workflow=$(curl -s -u "${CIRCLE_TOKEN}": -X GET --header "Content-Type: application/json" "$url")
               echo $workflow
               # Get approval job id
               job_id=$(echo "$workflow" | jq -r '.items[] | select(.name=="<< parameters.job_name >>") | .approval_request_id ')
               echo $job_id
+
               if [[ -z $job_id ]]; then
                 echo "Approval ID not found"
                 exit 1
               fi
+
               echo "Approving << parameters.job_name >> for workflow $url"
               echo "Job ID: ${job_id}"
               curl \
@@ -99,7 +100,8 @@ job_definitions:
   build_steps: &build_steps
     working_directory: ~/
     steps:
-      - setup_remote_docker
+      - setup_remote_docker:
+          docker_layer_caching: false
       - run: |
           if [[ -d source/cache ]]; then ls -al source/cache; fi
       - run: activate-gcloud-account.sh
@@ -195,6 +197,21 @@ job_definitions:
       - run: make copy
       - run: make persist
       - run: BUILD_TAG="${CIRCLE_TAG}" make deploy
+
+  rollback_db_steps: &rollback_db_steps
+    working_directory: /tmp/workspace/src
+    steps:
+      - checkout
+      - run:
+          name: Configure
+          command: activate-gcloud-account.sh
+      - run:
+          name: Get keys
+          command: echo $SQLPROXY_KEY | base64 -d > key.json
+      - run:
+          name: Restore database
+          command: restore_db.sh
+          no_output_timeout: 20m
 
 jobs:
   build-develop:
@@ -314,6 +331,13 @@ jobs:
       <<: *production_environment
     <<: *rollback_steps
 
+  rollback-production-db:
+    <<: *defaults
+    environment:
+      <<: *common_environment
+      <<: *production_environment
+    <<: *rollback_db_steps
+
   create-sync-sql:
     <<: *defaults
     environment:
@@ -343,10 +367,14 @@ jobs:
           at: /tmp/workspace
       - run:
           name: Configure
-          command: |
-            activate-gcloud-account.sh
-      - run: echo $SQLPROXY_KEY | base64 -d > key.json
-      - run: sql_to_sync_site.sh release
+          command: activate-gcloud-account.sh
+      - run:
+          name: Get keys
+          command: echo $SQLPROXY_KEY | base64 -d > key.json
+      - run:
+          name: Sync staging site
+          command: sql_to_sync_site.sh release
+          no_output_timeout: 20m
 
   sync-to-develop:
     <<: *defaults
@@ -360,21 +388,35 @@ jobs:
           at: /tmp/workspace
       - run:
           name: Configure
-          command: |
-            activate-gcloud-account.sh
-      - run: echo $SQLPROXY_KEY | base64 -d > key.json
-      - run: sql_to_sync_site.sh develop
+          command: activate-gcloud-account.sh
+      - run:
+          name: Check sync flag
+          command: check-data-sync-flag.sh
+      - run:
+          name: Get keys
+          command: echo $SQLPROXY_KEY | base64 -d > key.json
+      - run:
+          name: Sync dev site
+          command: sql_to_sync_site.sh develop
+          no_output_timeout: 20m
 
   notify-sync:
     <<: *defaults
     environment:
       <<: *common_environment
-      <<: *production_environment
+      <<: *develop_environment
     working_directory: /tmp/workspace/src
     steps:
       - checkout
-      - run: activate-gcloud-account.sh
-      - run: notify-sync-admins.sh
+      - run:
+          name: Configure
+          command: activate-gcloud-account.sh
+      - run:
+          name: Check sync flag
+          command: check-data-sync-flag.sh
+      - run:
+          name: Notify admins
+          command: notify-sync-admins.sh
 
   backup:
     docker:
@@ -424,6 +466,7 @@ workflow_definitions:
 
 workflows:
   develop:
+    when: << pipeline.parameters.run_develop >>
     jobs:
       - build-develop:
           <<: *on_develop_commit
@@ -431,6 +474,7 @@ workflows:
           <<: *on_develop_commit
           requires:
             - build-develop
+
   production:
     unless: << pipeline.parameters.rollback >>
     jobs:
@@ -468,6 +512,7 @@ workflows:
           is_prod: true
           requires:
             - hold-production
+
   rollback:
     when: << pipeline.parameters.rollback >>
     jobs:
@@ -478,10 +523,52 @@ workflows:
           type: approval
           requires:
             - rollback-staging
+      - hold-production-db:
+          <<: *on_release_tag
+          type: approval
+          requires:
+            - rollback-staging
       - rollback-production:
           <<: *on_release_tag
           requires:
             - hold-production
+      - rollback-production-db:
+          <<: *on_release_tag
+          requires:
+            - hold-production-db
+
+  sync-from-production:
+    triggers:
+      - schedule:
+          cron: "10 01 1 * *"
+          filters:
+            branches:
+              only:
+                - main
+    jobs:
+      - create-sync-sql:
+          context: org-global
+      - sync-to-staging:
+          context: org-global
+          requires:
+            - create-sync-sql
+      - sync-to-develop:
+          context: org-global
+          requires:
+            - create-sync-sql
+
+  notify-sync:
+    triggers:
+      - schedule:
+          cron: "10 02 28 * *"
+          filters:
+            branches:
+              only:
+                - main
+    jobs:
+      - notify-sync:
+          context: org-global
+
   backup:
     triggers:
       - schedule:
