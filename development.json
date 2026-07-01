@@ -1,6 +1,0 @@
-{
-  "require": {
-    "wpackagist-plugin/daext-helpful": "1.*",
-    "greenpeace/planet4-child-theme-handbook": "dev-daext-helpful"
-  }
-}
